@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-
 const Title = ({ todoCount }) => {
   return (
     <header className="App-header">
@@ -19,12 +18,10 @@ class MainPage extends React.Component {
     value: "",
     todos: []
   };
-
   handleChange = e => {
     e.preventDefault();
     this.setState({ value: e.target.value });
   };
-
   handleClick = () => {
     this.setState(prevState => ({
       todos: [
@@ -37,19 +34,32 @@ class MainPage extends React.Component {
       ]
     }));
   };
-
   deletehandleClick = () => {
     this.setState(state => ({
       todos: []
     }));
   };
-
+  markAsDoneClick = key => {
+    this.setState(prevState => ({
+      todos: prevState.todos.map(todo => {
+        if (todo.key !== key) {
+          return todo;
+        }
+        return {
+          ...todo,
+          isFinished: !todo.isFinished
+        };
+      })
+    }));
+  };
   removehandleClick = key => {
     this.setState(prevState => ({
       todos: prevState.todos.filter(todo => todo.key !== key)
     }));
   };
-
+  clearInput = () => {
+    document.getElementById("input").value = "";
+  };
   render() {
     return (
       <div className="App-mid">
@@ -57,12 +67,13 @@ class MainPage extends React.Component {
         <label className="index">
           <input
             className="input"
+            id="input"
+            onClick={this.clearInput}
             type="text"
             value={this.state.value}
             onChange={this.handleChange}
           />
         </label>
-
         <button className="G0" onClick={this.handleClick}>
           Add new todo
         </button>
@@ -84,7 +95,13 @@ class MainPage extends React.Component {
             >
               Delete task
             </button>
-            <button className="G2">Mark as done</button>
+            <button
+              id="Unmark"
+              className="G2"
+              onClick={() => this.markAsDoneClick(todo.key)}
+            >
+              Mark as done
+            </button>
           </div>
         ))}
       </div>
